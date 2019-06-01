@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: https://github.com/monken/aws-ecr-public
+
+Parameters:
+  TableName:
+    Type: String
+    Default: "aws-job-scheduler"
+    Description: "Name of dynamodb table"
+
+Resources:
+
+  Dynamodb:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - AttributeName: jobUUID
+          AttributeType: "S"
+        - AttributeName: jobType
+          AttributeType: "S"
+        - AttributeName: TTL
+          AttributeType: "N"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema: 
+        - AttributeName: jobUUID
+          KeyType: HASH
+        - AttributeName: TTL
+          KeyType: RANGE
+      GlobalSecondaryIndexes: 
+        - IndexName: jobType-TTL-index
+          KeySchema:
+            - AttributeName: jobType
+              KeyType: HASH
+            - AttributeName: TTL
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      TableName: !Ref TableName
+  
+  CloudwatchLambdaRule: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Name: TriggerJobScheduler
+      ScheduleExpression: "rate(10 minutes)"
+      State: ENABLED
+      Targets: 
+        - Arn: !GetAtt Lambda.Arn
+          Id: !Ref Lambda
+
+  CloudWatchLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt Lambda.Arn
+      Principal: events.amazonaws.com
+      SourceAccount: !Sub '${AWS::AccountId}'
+      SourceArn: !GetAtt CloudwatchLambdaRule.Arn
+
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      InlineCode: !Include { type: string, location: default-lambda.js }
+      Timeout: 30
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+                - dynamodb:Delete
+              Resource: 
+                - !Sub '${Dynamodb.Arn}/index/jobType-TTL-index'
+                - !GetAtt Dynamodb.Arn
+            - Effect: Allow
+              Action:
+                - lambda:Invoke
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - logs:PutLogEvents
+              Resource: '*'
+
+Outputs:
+
+  LambdaExecutionRoleName:
+    Value: !Ref LambdaRole
+    Export:
+      Name: !Sub ${AWS::StackName}:LambdaExecutionRoleName
