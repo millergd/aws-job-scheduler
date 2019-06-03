@@ -6,7 +6,7 @@ This is a universal job scheduler for AWS lambda functions. The underlying archi
 
 You can deploy this stack in one of two ways:
 
-Click here or clone this repository and run the following command on a console with AWS permissions.
+Click here OR clone this repository and run the following command on a console with AWS permissions.
 ```bash
 make test
 ```
@@ -15,11 +15,11 @@ make test
 Items in the job table must be entered in the following form:
 ```json
 {
-    "jobUUID": STRING,
-    "jobType": STRING,
-    "TTL": INT,
-    "lambdaFuncArn": STRING,
-    "body": STRING
+    "jobUUID": "STRING",
+    "jobType": "STRING",
+    "TTL": "INT",
+    "lambdaFuncArn": "STRING",
+    "body": "STRING"
 }
 ```
 

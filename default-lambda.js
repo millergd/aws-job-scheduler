@@ -58,18 +58,18 @@ exports.handler = async (event, context, callback) => {
         Payload: job.body // this should already be json-ified
       }
 
-      lambda.invoke(invokeParams).promise()
+      await lambda.invoke(invokeParams).promise()
       
       const deleteParams = {
         TableName : "aws-job-scheduler",
         Key: {
-          jobUuid: job.jobUuid,
+          jobUUID: job.jobUUID,
           TTL: job.TTL
         }
       };
       console.log("Deleting job. " + deleteParams.toString())
 
-      dynamodb.delete(deleteParams).promise()
+      await dynamodb.delete(deleteParams).promise()
     }
 
     console.log("Successfully checked scheduled jobs.")
