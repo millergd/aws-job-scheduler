@@ -24,8 +24,6 @@ Resources:
       KeySchema: 
         - AttributeName: jobUUID
           KeyType: HASH
-        - AttributeName: TTL
-          KeyType: RANGE
       GlobalSecondaryIndexes: 
         - IndexName: jobType-TTL-index
           KeySchema:

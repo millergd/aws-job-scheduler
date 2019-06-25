@@ -64,7 +64,6 @@ exports.handler = async (event, context, callback) => {
         TableName : "aws-job-scheduler",
         Key: {
           jobUUID: job.jobUUID,
-          TTL: job.TTL
         }
       };
       console.log("Deleting job. " + deleteParams.toString())
