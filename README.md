@@ -23,10 +23,10 @@ Your resource stack will create a timed lambda function that executes jobs (e.g.
 }
 ```
 
-`lambdaFuncArn`: This is the ARN of the lambda function that you want to execute.
-`body`: (optional) This is a JSON object that is valid input for the corresponding lambda function.
-`TTL`: This is the time that the job needs to be executed.
-`jobUUID`: This doesn't technically have to be a UUID, but we recommed UUID because this is the hashKey of the item.
+`lambdaFuncArn`: This is the ARN of the lambda function that you want to execute.  
+`body`: (optional) This is a JSON object that is valid input for the corresponding lambda function.  
+`TTL`: This is the time that the job needs to be executed.  
+`jobUUID`: This doesn't technically have to be a UUID, but we recommed UUID because this is the hashKey of the item.  
 `jobType`: This is the sort key of the item. You may enter "default" for now, but the future plan is to have various types of jobs that can be executed differently.
 
 ## Customizations
