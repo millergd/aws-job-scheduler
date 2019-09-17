@@ -12,18 +12,22 @@ make test
 Note: you must have the AWS cli installed on your machine and configured with credentials
 
 ## Requirements
-Items in the job table must be entered in the following form:
+Your resource stack will create a timed lambda function that executes jobs (e.g. other lambda functions) that are in a DynamoDB table which is also created automatically as part of the resource stack. It is up to you to add jobs to the table however you see fit. Items in the job table must be entered in the following form:
 ```json
-{
-    "jobUUID": "STRING",
-    "jobType": "STRING",
-    "TTL": "INT",
+{   
     "lambdaFuncArn": "STRING",
-    "body": "STRING"
+    "TTL": "INT",
+    "body": "STRING",
+    "jobUUID": "STRING",
+    "jobType": "STRING"
 }
 ```
 
-The `body` parameter is optional and must be a JSON object.
+`lambdaFuncArn`: This is the ARN of the lambda function that you want to execute.
+`body`: (optional) This is a JSON object that is valid input for the corresponding lambda function.
+`TTL`: This is the time that the job needs to be executed.
+`jobUUID`: This doesn't technically have to be a UUID, but we recommed UUID because this is the hashKey of the item.
+`jobType`: This is the sort key of the item. You may enter "default" for now, but the future plan is to have various types of jobs that can be executed differently.
 
 ## Customizations
 
