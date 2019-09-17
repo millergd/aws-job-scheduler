@@ -4,12 +4,12 @@ This is a universal job scheduler for AWS lambda functions. The underlying archi
 
 ## Deployment
 
-You can deploy this stack in one of two ways:
-
-Click here OR clone this repository and run the following command on a console with AWS permissions.
+Clone this repository and run the following command on a console with AWS permissions.
 ```bash
 make test
 ```
+
+Note: you must have the AWS cli installed on your machine and configured with credentials
 
 ## Requirements
 Items in the job table must be entered in the following form:
@@ -31,4 +31,8 @@ You may futher customize this stack to fit your exact needs.
 
 ### Trigger Frequency
 
+TBD
+
 ### Multiple Job Types
+
+TBD
